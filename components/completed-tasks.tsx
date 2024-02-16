@@ -7,6 +7,12 @@ import { useTaskStore } from "@/lib/store";
 export const CompletedTasks = () => {
   const completedTasks = useTaskStore((state) => state.tasks?.completed);
 
+  const priorities = ["high", "med", "low"];
+
+  const priorityCompletedTasks = completedTasks.sort(
+    (a, z) => priorities.indexOf(a.priority) - priorities.indexOf(z.priority)
+  );
+
   return (
     <Droppable droppableId="completed">
       {(provided, snapshot) => (
@@ -15,9 +21,11 @@ export const CompletedTasks = () => {
             snapshot.isDraggingOver ? "bg-blue-400" : ""
           }`}
         >
-          <h2>Completed Tasks</h2>
+          <h2 className={snapshot.isDraggingOver ? "text-white" : "text-black"}>
+            Completed Tasks
+          </h2>
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            <TasksList tasksList={completedTasks} />
+            <TasksList tasksList={priorityCompletedTasks} />
             {provided.placeholder}
           </div>
         </div>
